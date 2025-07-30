@@ -2,29 +2,56 @@ package main
 
 import (
 	"chat/client"
+	"chat/server"
 	"chat/shared"
 	"flag"
+	"fmt"
 	"log"
 	"net"
 )
 
 func main() {
-	eb := shared.NewErrorBuilder().Msg("failed to initialize app")
-
-	fePort := flag.Int("port", 8080, "specify port to listen for front end connections")
-	serverAddress := flag.String("address", "127.0.0.1:8081", "specify central server address")
+	mode := flag.String("mode", "client", "specify mode of operation (server or client)")
+	port := flag.Int("port", 8080, "specify port to listen for connections")
+	serverAddress := flag.String("address", "127.0.0.1:8081", "specify central server address (only for client)")
 
 	flag.Parse()
 
-	log.Printf("Provided FE listen port is %v\n", *fePort)
-	log.Printf("Provided cental server address is %v\n", *serverAddress)
+	if *mode == "server" {
+		startServer(*port)
+	} else if *mode == "client" {
+		startClient(*serverAddress, *port)
+	} else {
+		fmt.Printf("Unknown mode of operation: %v. Allowed values are either 'server' or 'client'\n", *mode)
+	}
+}
 
-	addr, err := net.ResolveTCPAddr("tcp", *serverAddress)
+func startServer(serverPort int) {
+	eb := shared.NewErrorBuilder().Msg("failed to start client")
+
+	log.Printf("Provided server listen port is %v\n", serverPort)
+
+	serv := server.New(serverPort)
+
+	log.Println("Started server")
+	err := serv.Run()
+	if err != nil {
+		log.Fatalln(eb.Cause(err).Err())
+	}
+}
+
+func startClient(serverAddress string, clientPort int) {
+	eb := shared.NewErrorBuilder().Msg("failed to start client")
+
+	log.Printf("Provided client listen port is %v\n", clientPort)
+	log.Printf("Provided cental server address is %v\n", serverAddress)
+
+	addr, err := net.ResolveTCPAddr("tcp", serverAddress)
 	if err != nil {
 		log.Fatalln(eb.Cause(err).Err())
 	}
 
-	cl, err := client.New(addr, *fePort)
+	cl, err := client.New(addr, clientPort)
 	if err != nil {
 		log.Fatalln(eb.Cause(err).Err())
 	}
