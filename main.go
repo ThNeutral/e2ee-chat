@@ -1,48 +1,37 @@
 package main
 
 import (
-	"chat/libsignal/dh"
-	"chat/libsignal/dr"
-	"crypto/rand"
-	"fmt"
-	"os"
+	"chat/client"
+	"chat/shared"
+	"flag"
+	"log"
+	"net"
 )
 
 func main() {
-	secret := make([]byte, 32)
-	_, err := rand.Read(secret)
+	eb := shared.NewErrorBuilder().Msg("failed to initialize app")
+
+	fePort := flag.Int("port", 8080, "specify port to listen for front end connections")
+	serverAddress := flag.String("address", "127.0.0.1:8081", "specify central server address")
+
+	flag.Parse()
+
+	log.Printf("Provided FE listen port is %v\n", *fePort)
+	log.Printf("Provided cental server address is %v\n", *serverAddress)
+
+	addr, err := net.ResolveTCPAddr("tcp", *serverAddress)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatalln(eb.Cause(err).Err())
 	}
 
-	ourKeyPair, err := dh.NewKeyPair()
+	cl, err := client.New(addr, *fePort)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatalln(eb.Cause(err).Err())
 	}
 
-	ourRatchet := dr.NewRatchetFromKeyPair(secret, ourKeyPair)
-
-	theirRatchet, err := dr.NewRatchetFromPublicKey(secret, ourKeyPair.Public())
+	log.Println("Started client")
+	err = cl.Run()
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatalln(eb.Cause(err).Err())
 	}
-
-	plaintext := []byte("plaintext")
-	associatedData := []byte("")
-	headers, cyphertext, err := ourRatchet.Encrypt(plaintext, associatedData)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	plaintext2, err := theirRatchet.Decrypt(headers, cyphertext, associatedData)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	fmt.Println(string(plaintext2))
 }
