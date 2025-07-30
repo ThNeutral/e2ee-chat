@@ -12,10 +12,14 @@ import (
 )
 
 type Client struct {
-	handler    http.Handler
+	handler http.Handler
+
 	serverAddr net.Addr
 	clientPort int
-	templates  *template.Template
+
+	templates *template.Template
+
+	httpClient *http.Client
 }
 
 func New(serverAddr net.Addr, clientPort int) (*Client, error) {
@@ -34,15 +38,26 @@ func New(serverAddr net.Addr, clientPort int) (*Client, error) {
 	r.Use(middleware.Recoverer)
 
 	cl := &Client{
-		handler:    r,
+		handler: r,
+
 		serverAddr: serverAddr,
 		clientPort: clientPort,
-		templates:  templ,
+
+		templates: templ,
+
+		httpClient: &http.Client{},
 	}
+
+	r.Post("/echo", cl.handleEcho)
+	r.Get("/static/{name}", cl.handleStatic)
 
 	return cl, nil
 }
 
 func (c *Client) Run() error {
 	return http.ListenAndServe(fmt.Sprintf(":%v", c.clientPort), c.handler)
+}
+
+func (c *Client) getServerURL(endpoint string) string {
+	return fmt.Sprintf("http://%v/%v", c.serverAddr.String(), endpoint)
 }

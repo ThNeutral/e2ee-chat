@@ -3,7 +3,19 @@ package client
 import (
 	"chat/shared"
 	"embed"
+	"fmt"
 	"html/template"
+)
+
+type templateName string
+
+func (tn templateName) String() string {
+	return string(tn)
+}
+
+const (
+	pageTemplateName       templateName = "page"
+	componentsTemplateName templateName = "component"
 )
 
 //go:embed html/*.html
@@ -18,4 +30,8 @@ func initTemplates() (*template.Template, error) {
 	}
 
 	return templs, nil
+}
+
+func getTemplateName(part templateName, name string) string {
+	return fmt.Sprintf("%v_%v.html", part, name)
 }
