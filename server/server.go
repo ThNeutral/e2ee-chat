@@ -1,36 +1,27 @@
 package server
 
 import (
-	"fmt"
-	"net/http"
-
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"chat/shared"
 )
 
-type Server struct {
-	handler    http.Handler
-	serverPort int
+type ServerConfig struct {
+	Hub Hub
 }
 
-func New(serverPort int) *Server {
-	r := chi.NewRouter()
+type Server struct {
+	hub Hub
+}
 
-	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
-	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
+func New(cfg ServerConfig) (*Server, error) {
+	eb := shared.NewErrorBuilder().Msg("failed to initialize server")
 
-	s := &Server{
-		handler:    r,
-		serverPort: serverPort,
+	if cfg.Hub == nil {
+		return nil, eb.Causef("hub was not passed").Err()
 	}
 
-	r.Post("/echo", s.handleEcho)
+	s := &Server{
+		hub: cfg.Hub,
+	}
 
-	return s
-}
-
-func (s *Server) Run() error {
-	return http.ListenAndServe(fmt.Sprintf(":%v", s.serverPort), s.handler)
+	return s, nil
 }

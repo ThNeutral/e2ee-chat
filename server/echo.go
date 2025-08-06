@@ -20,7 +20,7 @@ func (r echoRequest) Validate() error {
 	return nil
 }
 
-func (s *Server) handleEcho(w http.ResponseWriter, r *http.Request) {
+func (s *Server) HandleEcho(w http.ResponseWriter, r *http.Request) {
 	eb := shared.NewErrorBuilder().Msg("failed to handle echo")
 
 	request, err := shared.ParseHTTPRequest[echoRequest](r)
