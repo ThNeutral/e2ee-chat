@@ -3,61 +3,66 @@ package client
 import (
 	"chat/shared"
 	"fmt"
-	"html/template"
 	"net"
 	"net/http"
-
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
 )
 
-type Client struct {
-	handler http.Handler
+type Config struct {
+	ServerAddr net.Addr
+	HTTPClient *http.Client
 
-	serverAddr net.Addr
-	clientPort int
-
-	templates *template.Template
-
-	httpClient *http.Client
+	GUI GUI
 }
 
-func New(serverAddr net.Addr, clientPort int) (*Client, error) {
+type Client struct {
+	serverAddr net.Addr
+	httpClient *http.Client
+
+	gui GUI
+}
+
+func New(cfg Config) (*Client, error) {
 	eb := shared.NewErrorBuilder().Msg("failed to initialize client")
 
-	templ, err := initTemplates()
-	if err != nil {
-		return nil, eb.Cause(err).Err()
+	if cfg.HTTPClient == nil {
+		return nil, eb.Causef("http client not passed").Err()
 	}
 
-	r := chi.NewRouter()
+	if cfg.ServerAddr == nil {
+		return nil, eb.Causef("server addr not passed").Err()
+	}
 
-	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
-	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
+	if cfg.GUI == nil {
+		return nil, eb.Causef("gui not passed").Err()
+	}
 
 	cl := &Client{
-		handler: r,
+		serverAddr: cfg.ServerAddr,
+		httpClient: cfg.HTTPClient,
 
-		serverAddr: serverAddr,
-		clientPort: clientPort,
-
-		templates: templ,
-
-		httpClient: &http.Client{},
+		gui: cfg.GUI,
 	}
-
-	r.Post("/echo", cl.handleEcho)
-	r.Get("/static/{name}", cl.handleStatic)
 
 	return cl, nil
 }
 
 func (c *Client) Run() error {
-	return http.ListenAndServe(fmt.Sprintf(":%v", c.clientPort), c.handler)
+	eb := shared.NewErrorBuilder().Msg("failed to run client")
+
+	err := c.gui.Init()
+	if err != nil {
+		return eb.Cause(err).Err()
+	}
+	defer shared.CloseWithEB(c.gui, eb)
+
+	err = c.gui.Run()
+	if err != nil {
+		return eb.Cause(err).Err()
+	}
+
+	return nil
 }
 
 func (c *Client) getServerURL(endpoint string) string {
-	return fmt.Sprintf("http://%v/%v", c.serverAddr.String(), endpoint)
+	return fmt.Sprintf("http://%v%v", c.serverAddr.String(), endpoint)
 }

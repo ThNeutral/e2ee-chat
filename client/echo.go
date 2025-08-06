@@ -5,6 +5,7 @@ import (
 	"chat/shared"
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 )
 
@@ -16,7 +17,7 @@ type EchoResponse struct {
 	Value string `json:"value"`
 }
 
-func (c *Client) handleEcho(w http.ResponseWriter, r *http.Request) {
+func (c *Client) HandleEcho(w http.ResponseWriter, r *http.Request) {
 	eb := shared.NewErrorBuilder().Msg("failed to handle echo")
 
 	reqPayload := EchoRequest{
@@ -49,8 +50,5 @@ func (c *Client) handleEcho(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := c.templates.ExecuteTemplate(w, getTemplateName(componentsTemplateName, "echo"), echoResp); err != nil {
-		shared.WriteHTTPError(w, http.StatusInternalServerError, eb.Cause(err).Err())
-		return
-	}
+	log.Print(echoResp)
 }
