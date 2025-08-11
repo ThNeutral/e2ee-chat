@@ -3,11 +3,14 @@ package main
 import (
 	"chat/client"
 	"chat/client/entities"
+	"chat/client/repository"
+	"chat/client/services/echo"
 	"chat/client/services/raylib"
 	"chat/shared"
 	"log"
 	"net"
 	"net/http"
+	"time"
 )
 
 func startClient(serverAddress string) {
@@ -16,6 +19,21 @@ func startClient(serverAddress string) {
 	log.Printf("Provided cental server address is %v\n", serverAddress)
 
 	addr, err := net.ResolveTCPAddr("tcp", serverAddress)
+	if err != nil {
+		log.Fatalln(eb.Cause(err).Err())
+	}
+
+	repo, err := repository.New(repository.RepositoryConfig{
+		ServerAddr: addr,
+		HTTPClient: &http.Client{},
+	})
+	if err != nil {
+		log.Fatalln(eb.Cause(err).Err())
+	}
+
+	echo, err := echo.New(echo.Config{
+		EchoRepository: repo,
+	})
 	if err != nil {
 		log.Fatalln(eb.Cause(err).Err())
 	}
@@ -30,8 +48,14 @@ func startClient(serverAddress string) {
 
 	cl, err := client.New(client.Config{
 		ServerAddr: addr,
-		HTTPClient: &http.Client{},
-		GUI:        raylib,
+		HTTPClient: &http.Client{
+			Timeout: 10 * time.Second,
+		},
+
+		DefaultTimeout: 10 * time.Second,
+
+		GUI:  raylib,
+		Echo: echo,
 	})
 	if err != nil {
 		log.Fatalln(eb.Cause(err).Err())

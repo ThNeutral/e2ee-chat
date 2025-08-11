@@ -3,7 +3,6 @@ package raylib
 import (
 	"chat/client/entities"
 	"chat/shared/rlutils"
-	"log"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
@@ -23,21 +22,8 @@ func (r *Raylib) handleInput(chars []rune) {
 		return
 	}
 
-	widget, ok := r.focused.(*entities.RectangleWidget)
-	if !ok {
-		log.Println("handleInput: unhandled widget type")
-		return
-	}
-
-	for _, char := range chars {
-		if char == 127 {
-			if len(widget.Text) != 0 {
-				widget.Text = widget.Text[:len(widget.Text)-1]
-			}
-			continue
-		}
-
-		widget.Text += string(char)
+	if onChange := r.onChange(r.focused); onChange != nil {
+		onChange(r.focused, chars)
 	}
 }
 
@@ -49,20 +35,20 @@ func (r *Raylib) handleMouseClick() {
 		if r.contains(widget, point) {
 			isClickOnBackground = false
 			if onClick := r.onClick(widget); onClick != nil {
-				onClick()
+				onClick(widget)
 			}
 
 			onFocus := r.onFocus(widget)
 			if widget != r.focused {
 				if r.focused != nil {
 					if prevOnFocus := r.onFocus(r.focused); prevOnFocus != nil {
-						prevOnFocus(false)
+						prevOnFocus(widget, false)
 					}
 				}
 
 				r.focused = widget
 				if onFocus != nil {
-					onFocus(true)
+					onFocus(widget, true)
 				}
 			}
 		}
@@ -71,42 +57,28 @@ func (r *Raylib) handleMouseClick() {
 	if isClickOnBackground {
 		if r.focused != nil {
 			if onFocus := r.onFocus(r.focused); onFocus != nil {
-				onFocus(false)
+				onFocus(r.focused, false)
 			}
 			r.focused = nil
 		}
 	}
 }
 
-func (r *Raylib) contains(widget Widget, point rlutils.Vector2) bool {
-	rectangle, ok := widget.(*entities.RectangleWidget)
-	if ok {
-		return rectangle.X <= point.X &&
-			rectangle.Y <= point.Y &&
-			rectangle.X+rectangle.Width >= point.X &&
-			rectangle.Y+rectangle.Height >= point.Y
-	}
-
-	log.Println("contains: unhandled widget type")
-	return false
+func (r *Raylib) contains(widget *entities.RectangleWidget, point rlutils.Vector2) bool {
+	return widget.X <= point.X &&
+		widget.Y <= point.Y &&
+		widget.X+widget.Width >= point.X &&
+		widget.Y+widget.Height >= point.Y
 }
 
-func (r *Raylib) onClick(widget Widget) entities.ClickEventHandler {
-	button, ok := widget.(*entities.RectangleWidget)
-	if ok {
-		return button.OnClick
-	}
-
-	log.Println("onClick: unhandled widget type")
-	return nil
+func (r *Raylib) onClick(widget *entities.RectangleWidget) entities.ClickEventHandler {
+	return widget.OnClick
 }
 
-func (r *Raylib) onFocus(widget Widget) entities.FocusEventHandler {
-	button, ok := widget.(*entities.RectangleWidget)
-	if ok {
-		return button.OnFocus
-	}
+func (r *Raylib) onFocus(widget *entities.RectangleWidget) entities.FocusEventHandler {
+	return widget.OnFocus
+}
 
-	log.Println("on: unhandled widget type")
-	return nil
+func (r *Raylib) onChange(widget *entities.RectangleWidget) entities.ChangeEventHandler {
+	return widget.OnChange
 }

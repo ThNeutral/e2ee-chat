@@ -2,17 +2,42 @@ package rlutils
 
 import (
 	"image/color"
+	"strings"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
 func DrawCentralizedText(rect rl.RectangleInt32, text string, fontSize int32, color color.RGBA) {
-	textWidth := rl.MeasureText(text, fontSize)
+	words := strings.Fields(text)
+	var lines []string
+	var currentLine string
 
-	width := rect.X + rect.Width/2 - textWidth/2
-	height := rect.Y + rect.Height/2 - fontSize/2
+	for _, word := range words {
+		testLine := word
+		if currentLine != "" {
+			testLine = currentLine + " " + word
+		}
 
-	rl.DrawText(text, width, height, fontSize, color)
+		if rl.MeasureText(testLine, fontSize) > int32(rect.Width) {
+			lines = append(lines, currentLine)
+			currentLine = word
+		} else {
+			currentLine = testLine
+		}
+	}
+	if currentLine != "" {
+		lines = append(lines, currentLine)
+	}
+
+	totalTextHeight := int32(len(lines)) * fontSize
+	startY := rect.Y + (rect.Height/2 - totalTextHeight/2)
+
+	for i, line := range lines {
+		textWidth := rl.MeasureText(line, fontSize)
+		x := rect.X + rect.Width/2 - textWidth/2
+		y := startY + int32(i)*fontSize
+		rl.DrawText(line, x, y, fontSize, color)
+	}
 }
 
 func GetInputForLastFrame() []rune {

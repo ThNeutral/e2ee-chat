@@ -5,20 +5,27 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"time"
 )
 
 type Config struct {
 	ServerAddr net.Addr
 	HTTPClient *http.Client
 
-	GUI GUI
+	DefaultTimeout time.Duration
+
+	GUI  GUI
+	Echo Echo
 }
 
 type Client struct {
 	serverAddr net.Addr
 	httpClient *http.Client
 
-	gui GUI
+	defaultTimeout time.Duration
+
+	gui  GUI
+	echo Echo
 }
 
 func New(cfg Config) (*Client, error) {
@@ -36,11 +43,22 @@ func New(cfg Config) (*Client, error) {
 		return nil, eb.Causef("gui not passed").Err()
 	}
 
+	if cfg.Echo == nil {
+		return nil, eb.Causef("echo not passed").Err()
+	}
+
+	if cfg.DefaultTimeout == 0 {
+		cfg.DefaultTimeout = 15 * time.Second
+	}
+
 	cl := &Client{
 		serverAddr: cfg.ServerAddr,
 		httpClient: cfg.HTTPClient,
 
-		gui: cfg.GUI,
+		defaultTimeout: cfg.DefaultTimeout,
+
+		gui:  cfg.GUI,
+		echo: cfg.Echo,
 	}
 
 	return cl, nil

@@ -4,6 +4,7 @@ import (
 	"chat/server"
 	"chat/server/services"
 	"chat/shared"
+	"chat/shared/endpoints"
 	"fmt"
 	"log"
 	"net/http"
@@ -24,7 +25,7 @@ func startServer(serverPort int) {
 	}
 
 	runner := shared.NewRunner()
-	runner.Post("/echo", serv.HandleEcho)
+	runner.Post(endpoints.Echo, serv.HandleEcho)
 
 	log.Println("Started server")
 	err = http.ListenAndServe(fmt.Sprintf(":%v", serverPort), runner)

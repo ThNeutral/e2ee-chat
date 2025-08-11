@@ -6,11 +6,15 @@ import (
 	"net/http"
 )
 
-type echoRequest struct {
+type EchoRequest struct {
 	Value string `json:"value"`
 }
 
-func (r echoRequest) Validate() error {
+type EchoResponse struct {
+	Value string `json:"value"`
+}
+
+func (r EchoRequest) Validate() error {
 	eb := shared.NewErrorBuilder().Msg("failed to validate echo request")
 
 	if r.Value == "" {
@@ -23,12 +27,16 @@ func (r echoRequest) Validate() error {
 func (s *Server) HandleEcho(w http.ResponseWriter, r *http.Request) {
 	eb := shared.NewErrorBuilder().Msg("failed to handle echo")
 
-	request, err := shared.ParseHTTPRequest[echoRequest](r)
+	request, err := shared.ParseHTTPRequest[EchoRequest](r)
 	if err != nil {
 		shared.WriteHTTPError(w, http.StatusBadRequest, eb.Cause(err).Err())
 		return
 	}
 
-	bytes, _ := json.Marshal(request)
+	resp := EchoResponse{
+		Value: request.Value,
+	}
+
+	bytes, _ := json.Marshal(resp)
 	w.Write(bytes)
 }

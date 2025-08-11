@@ -5,8 +5,6 @@ import (
 	"chat/shared"
 )
 
-type Widget interface{}
-
 type Config struct {
 	WindowConfig entities.WindowConfig
 }
@@ -16,9 +14,9 @@ type Raylib struct {
 	running bool
 	close   chan bool
 
-	widgets []Widget
+	widgets []*entities.RectangleWidget
 
-	focused Widget
+	focused *entities.RectangleWidget
 }
 
 func New(cfg Config) (*Raylib, error) {
@@ -42,6 +40,6 @@ func New(cfg Config) (*Raylib, error) {
 		running: false,
 		close:   make(chan bool),
 
-		widgets: []Widget{},
+		widgets: []*entities.RectangleWidget{},
 	}, nil
 }

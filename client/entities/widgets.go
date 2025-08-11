@@ -18,9 +18,9 @@ const (
 	ButtonWidgetType WidgetType = iota
 )
 
-type ClickEventHandler func()
-type FocusEventHandler func(focused bool)
-type ChangeEventHandler func(text string)
+type ClickEventHandler func(this *RectangleWidget)
+type FocusEventHandler func(this *RectangleWidget, focused bool)
+type ChangeEventHandler func(this *RectangleWidget, text []rune)
 
 type RectangleWidget struct {
 	rl.RectangleInt32
