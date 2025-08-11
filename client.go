@@ -3,7 +3,7 @@ package main
 import (
 	"chat/client"
 	"chat/client/entities"
-	"chat/client/services"
+	"chat/client/services/raylib"
 	"chat/shared"
 	"log"
 	"net"
@@ -20,7 +20,7 @@ func startClient(serverAddress string) {
 		log.Fatalln(eb.Cause(err).Err())
 	}
 
-	raylib, err := services.NewRaylib(services.RaylibConfig{
+	raylib, err := raylib.New(raylib.Config{
 		WindowConfig: entities.WindowConfig{
 			Width:  800,
 			Height: 600,

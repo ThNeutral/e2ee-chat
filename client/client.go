@@ -55,6 +55,8 @@ func (c *Client) Run() error {
 	}
 	defer shared.CloseWithEB(c.gui, eb)
 
+	c.setupInitialLayout()
+
 	err = c.gui.Run()
 	if err != nil {
 		return eb.Cause(err).Err()
