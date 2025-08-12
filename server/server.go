@@ -13,7 +13,7 @@ type Server struct {
 }
 
 func New(cfg ServerConfig) (*Server, error) {
-	eb := shared.NewErrorBuilder().Msg("failed to initialize server")
+	eb := shared.B().Msg("failed to initialize server")
 
 	if cfg.Hub == nil {
 		return nil, eb.Causef("hub was not passed").Err()

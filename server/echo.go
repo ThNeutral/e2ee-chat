@@ -3,6 +3,7 @@ package server
 import (
 	"chat/shared"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -15,17 +16,15 @@ type EchoResponse struct {
 }
 
 func (r EchoRequest) Validate() error {
-	eb := shared.NewErrorBuilder().Msg("failed to validate echo request")
-
 	if r.Value == "" {
-		return eb.Causef("value cannot be empty").Err()
+		return fmt.Errorf("value cannot be empty")
 	}
 
 	return nil
 }
 
 func (s *Server) HandleEcho(w http.ResponseWriter, r *http.Request) {
-	eb := shared.NewErrorBuilder().Msg("failed to handle echo")
+	eb := shared.B().Msg("failed to handle echo")
 
 	request, err := shared.ParseHTTPRequest[EchoRequest](r)
 	if err != nil {

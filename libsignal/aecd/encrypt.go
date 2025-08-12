@@ -17,7 +17,7 @@ var hash = sha512.New
 var encryptInfo = []byte("encrypt")
 
 func Encrypt(messageKey, plaintext, associatedData []byte) ([]byte, error) {
-	eb := shared.NewErrorBuilder().Msg("failed to aecd encrypt")
+	eb := shared.B().Msg("failed to aecd encrypt")
 
 	salt := make([]byte, 80)
 	reader := hkdf.New(hash, messageKey, salt, encryptInfo)

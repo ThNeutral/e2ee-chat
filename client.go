@@ -14,13 +14,11 @@ import (
 )
 
 func startClient(serverAddress string) {
-	eb := shared.NewErrorBuilder().Msg("failed to start client")
-
 	log.Printf("Provided cental server address is %v\n", serverAddress)
 
 	addr, err := net.ResolveTCPAddr("tcp", serverAddress)
 	if err != nil {
-		log.Fatalln(eb.Cause(err).Err())
+		log.Fatalln(err)
 	}
 
 	repo, err := repository.New(repository.RepositoryConfig{
@@ -28,14 +26,14 @@ func startClient(serverAddress string) {
 		HTTPClient: &http.Client{},
 	})
 	if err != nil {
-		log.Fatalln(eb.Cause(err).Err())
+		log.Fatalln(err)
 	}
 
 	echo, err := echo.New(echo.Config{
 		EchoRepository: repo,
 	})
 	if err != nil {
-		log.Fatalln(eb.Cause(err).Err())
+		log.Fatalln(err)
 	}
 
 	raylib, err := raylib.New(raylib.Config{
@@ -58,7 +56,7 @@ func startClient(serverAddress string) {
 		Echo: echo,
 	})
 	if err != nil {
-		log.Fatalln(eb.Cause(err).Err())
+		log.Fatalln(err)
 	}
 
 	runner := shared.NewRunner()
@@ -67,6 +65,6 @@ func startClient(serverAddress string) {
 	log.Println("Started client")
 	err = cl.Run()
 	if err != nil {
-		log.Fatalln(eb.Cause(err).Err())
+		log.Fatalln(err)
 	}
 }

@@ -28,29 +28,28 @@ type validatable interface {
 }
 
 func ParseHTTPRequest[T validatable](r *http.Request) (T, error) {
-	eb := NewErrorBuilder().Msg("failed to parse http request")
 	var val T
 
 	bytes, err := io.ReadAll(r.Body)
 	if err != nil {
-		return val, eb.Cause(err).Err()
+		return val, err
 	}
 
 	err = json.Unmarshal(bytes, &val)
 	if err != nil {
-		return val, eb.Cause(err).Err()
+		return val, err
 	}
 
 	err = val.Validate()
 	if err != nil {
-		return val, eb.Cause(err).Err()
+		return val, err
 	}
 
 	return val, nil
 }
 
 func DoHTTPRequest[Resp any](ctx context.Context, client *http.Client, method, url string, reqStruct any) (Resp, error) {
-	eb := NewErrorBuilder().Msg("failed to do http request")
+	eb := B().Msg("failed to do http request")
 	var respStruct Resp
 
 	var body io.Reader

@@ -8,7 +8,7 @@ import (
 )
 
 func (r *Repository) Echo(ctx context.Context, payload string) (string, error) {
-	eb := shared.NewErrorBuilder().Msg("failed to execute echo")
+	eb := shared.B().Msg("failed to execute echo")
 
 	req := server.EchoRequest{
 		Value: payload,

@@ -7,7 +7,7 @@ import (
 )
 
 func (r *Raylib) Init() error {
-	eb := shared.NewErrorBuilder().Msg("failed to init raylib")
+	eb := shared.B().Msg("failed to init raylib")
 
 	if r.running {
 		return eb.Causef("already running").Err()
@@ -22,7 +22,7 @@ func (r *Raylib) Init() error {
 }
 
 func (r *Raylib) Close() error {
-	eb := shared.NewErrorBuilder().Msg("failed to close raylib")
+	eb := shared.B().Msg("failed to close raylib")
 
 	if !r.running {
 		return eb.Causef("not running").Err()
@@ -35,7 +35,7 @@ func (r *Raylib) Close() error {
 }
 
 func (r *Raylib) Run() error {
-	eb := shared.NewErrorBuilder().Msg("failed to start loop")
+	eb := shared.B().Msg("failed to start loop")
 
 	if !r.running {
 		return eb.Causef("not running").Err()

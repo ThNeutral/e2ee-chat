@@ -20,7 +20,7 @@ type Raylib struct {
 }
 
 func New(cfg Config) (*Raylib, error) {
-	eb := shared.NewErrorBuilder().Msg("failed to create raylib")
+	eb := shared.B().Msg("failed to create raylib")
 
 	if cfg.WindowConfig.Width == 0 {
 		return nil, eb.Causef("width not passed").Err()

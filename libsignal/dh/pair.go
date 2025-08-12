@@ -12,7 +12,7 @@ type KeyPair struct {
 }
 
 func NewKeyPair() (*KeyPair, error) {
-	eb := shared.NewErrorBuilder().Msg("failed to generate dh pair")
+	eb := shared.B().Msg("failed to generate dh pair")
 	curve := ecdh.X25519()
 
 	privateKey, err := curve.GenerateKey(rand.Reader)

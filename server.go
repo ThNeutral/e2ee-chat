@@ -11,8 +11,6 @@ import (
 )
 
 func startServer(serverPort int) {
-	eb := shared.NewErrorBuilder().Msg("failed to start client")
-
 	log.Printf("Provided server listen port is %v\n", serverPort)
 
 	hub := services.NewHub(services.HubConfig{})
@@ -21,7 +19,7 @@ func startServer(serverPort int) {
 		Hub: hub,
 	})
 	if err != nil {
-		log.Fatalln(eb.Cause(err).Err())
+		log.Fatalln(err)
 	}
 
 	runner := shared.NewRunner()
@@ -30,6 +28,6 @@ func startServer(serverPort int) {
 	log.Println("Started server")
 	err = http.ListenAndServe(fmt.Sprintf(":%v", serverPort), runner)
 	if err != nil {
-		log.Fatalln(eb.Cause(err).Err())
+		log.Fatalln(err)
 	}
 }

@@ -7,7 +7,7 @@ type ErrorBuilder struct {
 	cause   error
 }
 
-func NewErrorBuilder() *ErrorBuilder {
+func B() *ErrorBuilder {
 	return &ErrorBuilder{}
 }
 

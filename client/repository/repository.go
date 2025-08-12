@@ -17,7 +17,7 @@ type Repository struct {
 }
 
 func New(cfg RepositoryConfig) (*Repository, error) {
-	eb := shared.NewErrorBuilder().Msg("failed to initialize repository")
+	eb := shared.B().Msg("failed to initialize repository")
 
 	if cfg.ServerAddr == nil {
 		return nil, eb.Causef("server addr not passed").Err()

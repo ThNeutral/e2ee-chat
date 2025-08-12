@@ -7,7 +7,7 @@ import (
 )
 
 func DH(pair *KeyPair, pub []byte) ([]byte, error) {
-	eb := shared.NewErrorBuilder().Msg("failed to perform DH")
+	eb := shared.B().Msg("failed to perform DH")
 
 	secret, err := curve25519.X25519(pair.private, pub)
 	if err != nil {

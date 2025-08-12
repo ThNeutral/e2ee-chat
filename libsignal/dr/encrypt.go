@@ -8,7 +8,7 @@ import (
 )
 
 func (r *Ratchet) Encrypt(plaintext []byte, associatedData []byte) (map[string]any, []byte, error) {
-	eb := shared.NewErrorBuilder().Msg("failed to ratchet encrypt")
+	eb := shared.B().Msg("failed to ratchet encrypt")
 
 	chainKeySending, messageKey := hkdf.KDF_CK(r.chainKeySending)
 	r.chainKeySending = chainKeySending

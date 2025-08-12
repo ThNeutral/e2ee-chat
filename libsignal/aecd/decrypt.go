@@ -11,7 +11,7 @@ import (
 )
 
 func Decrypt(messageKey, ciphertextWithTag, associatedData []byte) ([]byte, error) {
-	eb := shared.NewErrorBuilder().Msg("failed to aecd decrypt")
+	eb := shared.B().Msg("failed to aecd decrypt")
 
 	if len(ciphertextWithTag) < 96 {
 		return nil, eb.Causef("ciphertext too short").Err()

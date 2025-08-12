@@ -31,7 +31,7 @@ type Ratchet struct {
 }
 
 func NewRatchetFromPublicKey(secret []byte, theirDHPublicKey []byte) (*Ratchet, error) {
-	eb := shared.NewErrorBuilder().Msg("failed to generate ratchet from public key")
+	eb := shared.B().Msg("failed to generate ratchet from public key")
 
 	ratchet := Ratchet{}
 
@@ -86,7 +86,7 @@ func NewRatchetFromKeyPair(secret []byte, ourKeyPair *dh.KeyPair) *Ratchet {
 }
 
 func (r *Ratchet) updateState(headers map[string]any) error {
-	eb := shared.NewErrorBuilder().Msg("failed to update state")
+	eb := shared.B().Msg("failed to update state")
 
 	pubKey, ok := headers[header.PublicKeyName].([]byte)
 	if !ok {

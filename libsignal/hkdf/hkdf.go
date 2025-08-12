@@ -14,7 +14,7 @@ var hash = sha512.New
 var rootKeyKDFInfo = []byte("KDF_RK")
 
 func KDF_RK(rootKey, dhOut []byte) ([]byte, []byte, error) {
-	eb := shared.NewErrorBuilder().Msg("failed to perform KDF_RK")
+	eb := shared.B().Msg("failed to perform KDF_RK")
 
 	reader := hkdf.New(hash, dhOut, rootKey, rootKeyKDFInfo)
 
@@ -49,7 +49,7 @@ func KDF_CK(chainKey []byte) ([]byte, []byte) {
 var kdfInfo = []byte("x3dh")
 
 func KDF(key []byte) ([]byte, error) {
-	eb := shared.NewErrorBuilder().Msg("failed to perform KDF")
+	eb := shared.B().Msg("failed to perform KDF")
 
 	var bytes []byte = make([]byte, 32)
 	for i := range bytes {

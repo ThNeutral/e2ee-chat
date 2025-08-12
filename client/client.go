@@ -29,7 +29,7 @@ type Client struct {
 }
 
 func New(cfg Config) (*Client, error) {
-	eb := shared.NewErrorBuilder().Msg("failed to initialize client")
+	eb := shared.B().Msg("failed to initialize client")
 
 	if cfg.HTTPClient == nil {
 		return nil, eb.Causef("http client not passed").Err()
@@ -65,19 +65,17 @@ func New(cfg Config) (*Client, error) {
 }
 
 func (c *Client) Run() error {
-	eb := shared.NewErrorBuilder().Msg("failed to run client")
-
 	err := c.gui.Init()
 	if err != nil {
-		return eb.Cause(err).Err()
+		return err
 	}
-	defer shared.CloseWithEB(c.gui, eb)
+	defer shared.Close(c.gui)
 
 	c.setupInitialLayout()
 
 	err = c.gui.Run()
 	if err != nil {
-		return eb.Cause(err).Err()
+		return err
 	}
 
 	return nil
