@@ -1,13 +1,13 @@
-package raylib
+package runner
 
 import (
-	"chat/client/entities"
+	"chat/raylib/entities"
 	"chat/shared/rlutils"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-func (r *Raylib) update() {
+func (r *Runner) update() {
 	if input := rlutils.GetInputForLastFrame(); len(input) != 0 {
 		r.handleInput(input)
 	}
@@ -17,7 +17,7 @@ func (r *Raylib) update() {
 	}
 }
 
-func (r *Raylib) handleInput(chars []rune) {
+func (r *Runner) handleInput(chars []rune) {
 	if r.focused == nil {
 		return
 	}
@@ -27,7 +27,7 @@ func (r *Raylib) handleInput(chars []rune) {
 	}
 }
 
-func (r *Raylib) handleMouseClick() {
+func (r *Runner) handleMouseClick() {
 	point := rlutils.GetMousePosition()
 
 	isClickOnBackground := true
@@ -64,21 +64,21 @@ func (r *Raylib) handleMouseClick() {
 	}
 }
 
-func (r *Raylib) contains(widget *entities.RectangleWidget, point rlutils.Vector2) bool {
+func (r *Runner) contains(widget *entities.RectangleWidget, point rlutils.Vector2) bool {
 	return widget.X <= point.X &&
 		widget.Y <= point.Y &&
 		widget.X+widget.Width >= point.X &&
 		widget.Y+widget.Height >= point.Y
 }
 
-func (r *Raylib) onClick(widget *entities.RectangleWidget) entities.ClickEventHandler {
+func (r *Runner) onClick(widget *entities.RectangleWidget) entities.ClickEventHandler {
 	return widget.OnClick
 }
 
-func (r *Raylib) onFocus(widget *entities.RectangleWidget) entities.FocusEventHandler {
+func (r *Runner) onFocus(widget *entities.RectangleWidget) entities.FocusEventHandler {
 	return widget.OnFocus
 }
 
-func (r *Raylib) onChange(widget *entities.RectangleWidget) entities.ChangeEventHandler {
+func (r *Runner) onChange(widget *entities.RectangleWidget) entities.ChangeEventHandler {
 	return widget.OnChange
 }

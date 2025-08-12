@@ -1,13 +1,13 @@
-package raylib
+package runner
 
 import (
-	"chat/client/entities"
+	"chat/raylib/entities"
 	"chat/shared/rlutils"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-func (r *Raylib) draw() {
+func (r *Runner) draw() {
 	rl.BeginDrawing()
 
 	rl.ClearBackground(rl.DarkGray)
@@ -19,7 +19,7 @@ func (r *Raylib) draw() {
 	rl.EndDrawing()
 }
 
-func (r *Raylib) drawWidget(widget *entities.RectangleWidget) {
+func (r *Runner) drawWidget(widget *entities.RectangleWidget) {
 	if r.focused == widget {
 		rlutils.DrawBorder(widget.RectangleInt32, widget.FocusBorderSize, widget.FocusBorderColor)
 	}

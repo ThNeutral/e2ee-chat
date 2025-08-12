@@ -1,4 +1,4 @@
-package raylib
+package runner
 
 import (
 	"chat/shared"
@@ -6,7 +6,7 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-func (r *Raylib) Init() error {
+func (r *Runner) Init() error {
 	eb := shared.B().Msg("failed to init raylib")
 
 	if r.running {
@@ -21,7 +21,7 @@ func (r *Raylib) Init() error {
 	return nil
 }
 
-func (r *Raylib) Close() error {
+func (r *Runner) Close() error {
 	eb := shared.B().Msg("failed to close raylib")
 
 	if !r.running {
@@ -34,7 +34,7 @@ func (r *Raylib) Close() error {
 	return nil
 }
 
-func (r *Raylib) Run() error {
+func (r *Runner) Run() error {
 	eb := shared.B().Msg("failed to start loop")
 
 	if !r.running {
@@ -42,6 +42,7 @@ func (r *Raylib) Run() error {
 	}
 
 	for !r.shouldClose() {
+
 		r.update()
 
 		r.draw()
@@ -50,15 +51,9 @@ func (r *Raylib) Run() error {
 	return nil
 }
 
-func (r *Raylib) shouldClose() bool {
+func (r *Runner) shouldClose() bool {
 	shouldStop := false
-
-	select {
-	case v := <-r.close:
-		shouldStop = v
-	default:
-		shouldStop = rl.WindowShouldClose()
-	}
+	shouldStop = rl.WindowShouldClose()
 
 	return shouldStop
 }

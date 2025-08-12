@@ -1,12 +1,12 @@
-package raylib
+package runner
 
 import (
-	"chat/client/entities"
+	"chat/raylib/entities"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-func (r *Raylib) AddRectangleWidget(x int32, y int32, width int32, height int32) *entities.RectangleWidget {
+func (r *Runner) AddRectangleWidget(x int32, y int32, width int32, height int32) *entities.RectangleWidget {
 	button := &entities.RectangleWidget{
 		RectangleInt32: rl.RectangleInt32{
 			X:      x,

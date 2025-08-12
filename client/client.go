@@ -14,7 +14,6 @@ type Config struct {
 
 	DefaultTimeout time.Duration
 
-	GUI  GUI
 	Echo Echo
 }
 
@@ -24,7 +23,6 @@ type Client struct {
 
 	defaultTimeout time.Duration
 
-	gui  GUI
 	echo Echo
 }
 
@@ -37,10 +35,6 @@ func New(cfg Config) (*Client, error) {
 
 	if cfg.ServerAddr == nil {
 		return nil, eb.Causef("server addr not passed").Err()
-	}
-
-	if cfg.GUI == nil {
-		return nil, eb.Causef("gui not passed").Err()
 	}
 
 	if cfg.Echo == nil {
@@ -56,29 +50,10 @@ func New(cfg Config) (*Client, error) {
 		httpClient: cfg.HTTPClient,
 
 		defaultTimeout: cfg.DefaultTimeout,
-
-		gui:  cfg.GUI,
-		echo: cfg.Echo,
+		echo:           cfg.Echo,
 	}
 
 	return cl, nil
-}
-
-func (c *Client) Run() error {
-	err := c.gui.Init()
-	if err != nil {
-		return err
-	}
-	defer shared.Close(c.gui)
-
-	c.setupInitialLayout()
-
-	err = c.gui.Run()
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func (c *Client) getServerURL(endpoint string) string {

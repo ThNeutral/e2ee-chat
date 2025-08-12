@@ -1,6 +1,6 @@
 package utils
 
-import "chat/client/entities"
+import "chat/raylib/entities"
 
 func InputChangeHandler(this *entities.RectangleWidget, text []rune) {
 	for _, char := range text {

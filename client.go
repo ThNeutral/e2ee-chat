@@ -2,11 +2,11 @@ package main
 
 import (
 	"chat/client"
-	"chat/client/entities"
 	"chat/client/repository"
 	"chat/client/services/echo"
-	"chat/client/services/raylib"
-	"chat/shared"
+	"chat/raylib"
+	"chat/raylib/entities"
+	"chat/raylib/runner"
 	"log"
 	"net"
 	"net/http"
@@ -36,14 +36,6 @@ func startClient(serverAddress string) {
 		log.Fatalln(err)
 	}
 
-	raylib, err := raylib.New(raylib.Config{
-		WindowConfig: entities.WindowConfig{
-			Width:  800,
-			Height: 600,
-			Title:  "TEST",
-		},
-	})
-
 	cl, err := client.New(client.Config{
 		ServerAddr: addr,
 		HTTPClient: &http.Client{
@@ -52,19 +44,26 @@ func startClient(serverAddress string) {
 
 		DefaultTimeout: 10 * time.Second,
 
-		GUI:  raylib,
 		Echo: echo,
 	})
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	runner := shared.NewRunner()
-	runner.Post("/echo", cl.HandleEcho)
+	runner := runner.New(runner.Config{
+		WindowConfig: entities.WindowConfig{
+			Width:  800,
+			Height: 600,
+			Title:  "TEST",
+		},
+	})
+
+	raylib := raylib.New(raylib.Config{
+		Runner: runner,
+
+		Echo: cl,
+	})
 
 	log.Println("Started client")
-	err = cl.Run()
-	if err != nil {
-		log.Fatalln(err)
-	}
+	raylib.Run()
 }
