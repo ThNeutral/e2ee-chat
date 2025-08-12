@@ -7,9 +7,19 @@ import (
 )
 
 type WindowConfig struct {
-	Width  int32
-	Height int32
-	Title  string
+	Width           int32
+	Height          int32
+	Title           string
+	BackgroundColor color.RGBA
+}
+
+func (cfg WindowConfig) ToRectangle() rl.RectangleInt32 {
+	return rl.RectangleInt32{
+		X:      0,
+		Y:      0,
+		Width:  cfg.Width,
+		Height: cfg.Height,
+	}
 }
 
 type WidgetType int
@@ -17,10 +27,6 @@ type WidgetType int
 const (
 	ButtonWidgetType WidgetType = iota
 )
-
-type ClickEventHandler func(this *RectangleWidget)
-type FocusEventHandler func(this *RectangleWidget, focused bool)
-type ChangeEventHandler func(this *RectangleWidget, text []rune)
 
 type RectangleWidget struct {
 	rl.RectangleInt32
@@ -37,4 +43,6 @@ type RectangleWidget struct {
 	OnClick  ClickEventHandler
 	OnFocus  FocusEventHandler
 	OnChange ChangeEventHandler
+
+	Children []*RectangleWidget
 }

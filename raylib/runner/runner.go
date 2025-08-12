@@ -1,6 +1,8 @@
 package runner
 
-import "chat/raylib/entities"
+import (
+	"chat/raylib/entities"
+)
 
 type Config struct {
 	WindowConfig entities.WindowConfig
@@ -9,17 +11,24 @@ type Config struct {
 type Runner struct {
 	windowConfig entities.WindowConfig
 
-	widgets []*entities.RectangleWidget
+	root    *entities.RectangleWidget
 	focused *entities.RectangleWidget
 
 	running bool
 }
 
 func New(cfg Config) *Runner {
+	rect := cfg.WindowConfig.ToRectangle()
+
+	root := getRectangleWidget(rect.X, rect.Y, rect.Width, rect.Height)
+	root.BackgroundColor = cfg.WindowConfig.BackgroundColor
+
 	return &Runner{
 		windowConfig: cfg.WindowConfig,
-		widgets:      []*entities.RectangleWidget{},
-		focused:      nil,
-		running:      false,
+
+		root:    root,
+		focused: nil,
+
+		running: false,
 	}
 }

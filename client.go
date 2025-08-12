@@ -11,6 +11,8 @@ import (
 	"net"
 	"net/http"
 	"time"
+
+	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
 func startClient(serverAddress string) {
@@ -52,11 +54,13 @@ func startClient(serverAddress string) {
 
 	runner := runner.New(runner.Config{
 		WindowConfig: entities.WindowConfig{
-			Width:  800,
-			Height: 600,
-			Title:  "TEST",
+			Width:           800,
+			Height:          600,
+			Title:           "TEST",
+			BackgroundColor: rl.DarkGreen,
 		},
 	})
+	runner.SetupInitialLayout()
 
 	raylib := raylib.New(raylib.Config{
 		Runner: runner,

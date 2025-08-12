@@ -8,77 +8,60 @@ import (
 )
 
 func (r *Runner) update() {
-	if input := rlutils.GetInputForLastFrame(); len(input) != 0 {
-		r.handleInput(input)
-	}
+	// if input := rlutils.GetInputForLastFrame(); len(input) != 0 {
+	// 	r.handleInput(input)
+	// }
 
 	if rl.IsMouseButtonPressed(rl.MouseButtonLeft) {
 		r.handleMouseClick()
 	}
 }
 
-func (r *Runner) handleInput(chars []rune) {
-	if r.focused == nil {
-		return
-	}
-
-	if onChange := r.onChange(r.focused); onChange != nil {
-		onChange(r.focused, chars)
-	}
-}
-
 func (r *Runner) handleMouseClick() {
-	point := rlutils.GetMousePosition()
+	mousePosition := rlutils.GetMousePosition()
 
-	isClickOnBackground := true
-	for _, widget := range r.widgets {
-		if r.contains(widget, point) {
-			isClickOnBackground = false
-			if onClick := r.onClick(widget); onClick != nil {
-				onClick(widget)
-			}
+	handlers := buildClickHandlerChain(nil, r.root, mousePosition)
 
-			onFocus := r.onFocus(widget)
-			if widget != r.focused {
-				if r.focused != nil {
-					if prevOnFocus := r.onFocus(r.focused); prevOnFocus != nil {
-						prevOnFocus(widget, false)
-					}
-				}
-
-				r.focused = widget
-				if onFocus != nil {
-					onFocus(widget, true)
-				}
-			}
+	for _, handler := range handlers {
+		if handler == nil {
+			break
 		}
-	}
 
-	if isClickOnBackground {
-		if r.focused != nil {
-			if onFocus := r.onFocus(r.focused); onFocus != nil {
-				onFocus(r.focused, false)
-			}
-			r.focused = nil
+		event := &entities.ClickEvent{
+			Event: entities.Event{
+				ShouldPropagate: false,
+			},
+		}
+
+		handler(event)
+
+		if !event.ShouldPropagate {
+			break
 		}
 	}
 }
 
-func (r *Runner) contains(widget *entities.RectangleWidget, point rlutils.Vector2) bool {
-	return widget.X <= point.X &&
-		widget.Y <= point.Y &&
-		widget.X+widget.Width >= point.X &&
-		widget.Y+widget.Height >= point.Y
+func buildClickHandlerChain(parentRect *rl.RectangleInt32, widget *entities.RectangleWidget, mousePosition rlutils.Vector2) []entities.ClickEventHandler {
+	actualRect := widget.RectangleInt32
+	if parentRect != nil {
+		actualRect.X += parentRect.X
+		actualRect.Y += parentRect.Y
+	}
+
+	if !containsRect(actualRect, mousePosition) {
+		return []entities.ClickEventHandler{}
+	}
+
+	for _, child := range widget.Children {
+		prev := buildClickHandlerChain(&actualRect, child, mousePosition)
+		if len(prev) != 0 {
+			return append(prev, widget.OnClick)
+		}
+	}
+
+	return []entities.ClickEventHandler{widget.OnClick}
 }
 
-func (r *Runner) onClick(widget *entities.RectangleWidget) entities.ClickEventHandler {
-	return widget.OnClick
-}
-
-func (r *Runner) onFocus(widget *entities.RectangleWidget) entities.FocusEventHandler {
-	return widget.OnFocus
-}
-
-func (r *Runner) onChange(widget *entities.RectangleWidget) entities.ChangeEventHandler {
-	return widget.OnChange
+func containsRect(rect rl.RectangleInt32, point rlutils.Vector2) bool {
+	return point.X >= rect.X && point.X <= rect.X+rect.Width && point.Y >= rect.Y && point.Y <= rect.Y+rect.Height
 }

@@ -10,25 +10,31 @@ import (
 func (r *Runner) draw() {
 	rl.BeginDrawing()
 
-	rl.ClearBackground(rl.DarkGray)
+	rl.ClearBackground(r.root.BackgroundColor)
 
-	for _, widget := range r.widgets {
-		r.drawWidget(widget)
-	}
+	r.drawWidget(nil, r.root)
 
 	rl.EndDrawing()
 }
 
-func (r *Runner) drawWidget(widget *entities.RectangleWidget) {
-	if r.focused == widget {
-		rlutils.DrawBorder(widget.RectangleInt32, widget.FocusBorderSize, widget.FocusBorderColor)
+func (r *Runner) drawWidget(parentRect *rl.RectangleInt32, widget *entities.RectangleWidget) {
+	// if r.focused == widget {
+	// 	rlutils.DrawBorder(widget.RectangleInt32, widget.FocusBorderSize, widget.FocusBorderColor)
+	// }
+
+	actualRect := widget.RectangleInt32
+	if parentRect != nil {
+		actualRect.X += parentRect.X
+		actualRect.Y += parentRect.Y
 	}
 
-	rl.DrawRectangle(widget.X, widget.Y, widget.Width, widget.Height, widget.BackgroundColor)
+	rl.DrawRectangle(actualRect.X, actualRect.Y, actualRect.Width, actualRect.Height, widget.BackgroundColor)
 
 	if widget.Text != "" {
 		rlutils.DrawCentralizedText(widget.RectangleInt32, widget.Text, widget.FontSize, widget.TextColor)
 	}
 
-	return
+	for _, child := range widget.Children {
+		r.drawWidget(&actualRect, child)
+	}
 }

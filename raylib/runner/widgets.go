@@ -6,7 +6,7 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-func (r *Runner) AddRectangleWidget(x int32, y int32, width int32, height int32) *entities.RectangleWidget {
+func getRectangleWidget(x int32, y int32, width int32, height int32) *entities.RectangleWidget {
 	button := &entities.RectangleWidget{
 		RectangleInt32: rl.RectangleInt32{
 			X:      x,
@@ -27,9 +27,9 @@ func (r *Runner) AddRectangleWidget(x int32, y int32, width int32, height int32)
 		OnClick:  nil,
 		OnFocus:  nil,
 		OnChange: nil,
-	}
 
-	r.widgets = append(r.widgets, button)
+		Children: []*entities.RectangleWidget{},
+	}
 
 	return button
 }
