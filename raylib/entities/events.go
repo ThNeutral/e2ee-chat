@@ -1,13 +1,14 @@
 package entities
 
-type Event struct {
+type ClickEvent struct {
 	ShouldPropagate bool
 }
-
-type ClickEvent struct {
-	Event
-}
-
 type ClickEventHandler func(event *ClickEvent)
-type FocusEventHandler func(this *RectangleWidget, focused bool)
-type ChangeEventHandler func(this *RectangleWidget, text []rune)
+
+type FocusEvent struct{}
+type FocusEventHandler func(event *FocusEvent)
+
+type InputEvent struct {
+	Text []rune
+}
+type InputEventHandler func(event *InputEvent)

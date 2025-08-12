@@ -37,12 +37,13 @@ type RectangleWidget struct {
 	FontSize int32
 	Text     string
 
+	Focusable        bool
 	FocusBorderColor color.RGBA
 	FocusBorderSize  int32
 
-	OnClick  ClickEventHandler
-	OnFocus  FocusEventHandler
-	OnChange ChangeEventHandler
+	OnClick ClickEventHandler
+	OnFocus FocusEventHandler
+	OnInput InputEventHandler
 
 	Children []*RectangleWidget
 }

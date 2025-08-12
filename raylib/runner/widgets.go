@@ -21,12 +21,13 @@ func getRectangleWidget(x int32, y int32, width int32, height int32) *entities.R
 		Text:     "",
 		FontSize: 16,
 
+		Focusable:        false,
 		FocusBorderColor: rl.Black,
 		FocusBorderSize:  2,
 
-		OnClick:  nil,
-		OnFocus:  nil,
-		OnChange: nil,
+		OnClick: nil,
+		OnFocus: nil,
+		OnInput: nil,
 
 		Children: []*entities.RectangleWidget{},
 	}
