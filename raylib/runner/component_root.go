@@ -3,21 +3,24 @@ package runner
 import (
 	"chat/raylib/entities"
 	"image/color"
-	"log"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-func (r *Runner) SetupInitialLayout() {
+func (r *Runner) rootComponent() {
 	text := getRectangleWidget(220, 100, 100, 100)
 	text.BackgroundColor = color.RGBA{}
 
 	r.root.Children = append(r.root.Children, text)
 
+	r.root.OnClick = func(event *entities.ClickEvent) {
+		text.Text = ""
+	}
+
 	box := getRectangleWidget(100, 100, 100, 100)
 	box.BackgroundColor = rl.LightGray
 	box.OnClick = func(event *entities.ClickEvent) {
-		log.Println("box clicked")
+		text.Text = "box clicked"
 	}
 
 	r.root.Children = append(r.root.Children, box)
@@ -25,7 +28,7 @@ func (r *Runner) SetupInitialLayout() {
 	box2 := getRectangleWidget(50, 50, 50, 50)
 	box2.BackgroundColor = rl.SkyBlue
 	box2.OnClick = func(event *entities.ClickEvent) {
-		log.Println("box2 clicked")
+		text.Text = "box2 clicked"
 	}
 
 	box.Children = append(box.Children, box2)

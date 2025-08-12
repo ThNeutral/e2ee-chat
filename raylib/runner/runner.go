@@ -23,7 +23,7 @@ func New(cfg Config) *Runner {
 	root := getRectangleWidget(rect.X, rect.Y, rect.Width, rect.Height)
 	root.BackgroundColor = cfg.WindowConfig.BackgroundColor
 
-	return &Runner{
+	r := &Runner{
 		windowConfig: cfg.WindowConfig,
 
 		root:    root,
@@ -31,4 +31,8 @@ func New(cfg Config) *Runner {
 
 		running: false,
 	}
+
+	r.rootComponent()
+
+	return r
 }

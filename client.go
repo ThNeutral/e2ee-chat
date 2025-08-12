@@ -60,7 +60,6 @@ func startClient(serverAddress string) {
 			BackgroundColor: rl.DarkGreen,
 		},
 	})
-	runner.SetupInitialLayout()
 
 	raylib := raylib.New(raylib.Config{
 		Runner: runner,
