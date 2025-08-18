@@ -12,6 +12,8 @@ func (r *Raylib) Run() error {
 	}
 
 	for !r.shouldClose() {
+		r.update()
+
 		rl.BeginDrawing()
 
 		r.draw()

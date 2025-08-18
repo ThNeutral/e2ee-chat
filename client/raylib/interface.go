@@ -1,5 +1,7 @@
 package raylib
 
+import "chat/shared/rlutils"
+
 type ComponentType int
 
 const (
@@ -9,4 +11,7 @@ const (
 
 type Component interface {
 	Type() ComponentType
+	OnClick() OnClickHandler
+	Contains(rlutils.Vector2) bool
+	Children() []Component
 }

@@ -38,6 +38,8 @@ func New(cfg Config) *Raylib {
 		Height: cfg.Size.Y,
 	}, cfg.BackgroundColor)
 
+	root.OnClickField = func(c Component) {}
+
 	return &Raylib{
 		running: false,
 		root:    root,
@@ -70,6 +72,5 @@ func (r *Raylib) Close() error {
 }
 
 func (r *Raylib) SetRootComponent(component Component) {
-	r.root.Children = []Component{component}
-	fmt.Println(r.root.Children)
+	r.root.ChildrenField = []Component{component}
 }
