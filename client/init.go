@@ -4,8 +4,7 @@ import (
 	"chat/client/raylib"
 	"chat/client/raylib/entities"
 	"chat/shared/rlutils"
-	"image/color"
-	"math/rand/v2"
+	"fmt"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
@@ -18,15 +17,6 @@ func (c *Client) init() {
 		Height: 400,
 	}, rl.RayWhite)
 
-	root.OnClickField = func(c raylib.Component) {
-		root.Color = color.RGBA{
-			R: uint8(rand.IntN(255)),
-			G: uint8(rand.IntN(255)),
-			B: uint8(rand.IntN(255)),
-			A: 255,
-		}
-	}
-
 	c.gui.SetRootComponent(root)
 
 	circle := raylib.NewCircleComponent(entities.Circle{
@@ -37,12 +27,10 @@ func (c *Client) init() {
 		Radius: 25,
 	}, rl.Red)
 
-	circle.OnClickField = func(c raylib.Component) {
-		circle.Color = color.RGBA{
-			R: uint8(rand.IntN(255)),
-			G: uint8(rand.IntN(255)),
-			B: uint8(rand.IntN(255)),
-			A: 255,
+	circle.OnClickField = func(_ raylib.Component) {
+		err := c.websocket.Connect()
+		if err != nil {
+			fmt.Println(err)
 		}
 	}
 

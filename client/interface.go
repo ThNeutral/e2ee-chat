@@ -9,3 +9,7 @@ type GUI interface {
 
 	SetRootComponent(raylib.Component)
 }
+
+type Websocket interface {
+	Connect() error
+}

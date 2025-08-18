@@ -3,16 +3,19 @@ package client
 import "fmt"
 
 type Config struct {
-	GUI GUI
+	GUI       GUI
+	Websocket Websocket
 }
 
 type Client struct {
-	gui GUI
+	gui       GUI
+	websocket Websocket
 }
 
 func New(cfg Config) *Client {
 	return &Client{
-		gui: cfg.GUI,
+		gui:       cfg.GUI,
+		websocket: cfg.Websocket,
 	}
 }
 
