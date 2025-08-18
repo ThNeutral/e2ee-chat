@@ -16,6 +16,10 @@ func New(cfg Config) *Client {
 	}
 }
 
+func (c *Client) Init() {
+	c.init()
+}
+
 func (c *Client) Run() error {
 	err := c.gui.Init()
 	if err != nil {

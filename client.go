@@ -24,6 +24,7 @@ func runClient() {
 		GUI: rl,
 	})
 
+	cl.Init()
 	err := cl.Run()
 	if err != nil {
 		log.Fatalln(err)

@@ -8,13 +8,16 @@ import (
 
 type CircleComponent struct {
 	entities.Circle
-	Color rl.Color
+	BaseComponent
 }
 
-func componentCircle(circle entities.Circle, color rl.Color) *CircleComponent {
+func NewCircleComponent(circle entities.Circle, color rl.Color) *CircleComponent {
 	return &CircleComponent{
 		Circle: circle,
-		Color:  color,
+		BaseComponent: BaseComponent{
+			Color:    color,
+			Children: []Component{},
+		},
 	}
 }
 

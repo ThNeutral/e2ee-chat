@@ -15,7 +15,7 @@ func (r *Raylib) drawComponent(c Component) {
 	case ComponentTypeCircle:
 		r.drawCircle(c.(*CircleComponent))
 	case ComponentTypeRectangle:
-
+		r.drawRectangle(c.(*RectangleComponent))
 	default:
 		log.Fatalf("unknown component type: %v\n", c.Type())
 	}
@@ -23,4 +23,16 @@ func (r *Raylib) drawComponent(c Component) {
 
 func (r *Raylib) drawCircle(c *CircleComponent) {
 	rl.DrawCircle(c.Center.X, c.Center.Y, c.Radius, c.Color)
+
+	for _, component := range c.Children {
+		r.drawComponent(component)
+	}
+}
+
+func (r *Raylib) drawRectangle(rect *RectangleComponent) {
+	rl.DrawRectangle(rect.X, rect.Y, rect.Width, rect.Height, rect.Color)
+
+	for _, component := range rect.Children {
+		r.drawComponent(component)
+	}
 }

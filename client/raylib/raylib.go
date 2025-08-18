@@ -1,7 +1,6 @@
 package raylib
 
 import (
-	"chat/client/raylib/entities"
 	"chat/shared/rlutils"
 	"fmt"
 
@@ -16,10 +15,11 @@ type Config struct {
 }
 
 type Raylib struct {
-	config Config
+	windowName      string
+	targetFramerate int
 
 	running bool
-	root    Component
+	root    *RectangleComponent
 }
 
 func New(cfg Config) *Raylib {
@@ -31,18 +31,19 @@ func New(cfg Config) *Raylib {
 		cfg.TargetFramerate = 60
 	}
 
+	root := NewRectangleComponent(rl.RectangleInt32{
+		X:      0,
+		Y:      0,
+		Width:  cfg.Size.X,
+		Height: cfg.Size.Y,
+	}, cfg.BackgroundColor)
+
 	return &Raylib{
-		config: cfg,
-
 		running: false,
+		root:    root,
 
-		root: componentCircle(entities.Circle{
-			Center: rlutils.Vector2{
-				X: 50,
-				Y: 50,
-			},
-			Radius: 75,
-		}, rl.Red),
+		windowName:      cfg.WindowName,
+		targetFramerate: cfg.TargetFramerate,
 	}
 }
 
@@ -51,7 +52,7 @@ func (r *Raylib) Init() error {
 		return fmt.Errorf("already running")
 	}
 
-	rl.InitWindow(r.config.Size.X, r.config.Size.Y, r.config.WindowName)
+	rl.InitWindow(r.root.Width, r.root.Height, r.windowName)
 	r.running = true
 
 	return nil
@@ -66,4 +67,9 @@ func (r *Raylib) Close() error {
 	r.running = false
 
 	return nil
+}
+
+func (r *Raylib) SetRootComponent(component Component) {
+	r.root.Children = []Component{component}
+	fmt.Println(r.root.Children)
 }

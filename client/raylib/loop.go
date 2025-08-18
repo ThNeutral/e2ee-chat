@@ -14,8 +14,6 @@ func (r *Raylib) Run() error {
 	for !r.shouldClose() {
 		rl.BeginDrawing()
 
-		rl.ClearBackground(r.config.BackgroundColor)
-
 		r.draw()
 
 		rl.EndDrawing()
