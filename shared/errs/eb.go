@@ -1,10 +1,15 @@
-package shared
+package errs
 
 import "fmt"
 
 type ErrorBuilder struct {
 	message string
 	cause   error
+	code    int
+}
+
+func (b *ErrorBuilder) GetCode() int {
+	return b.code
 }
 
 func B() *ErrorBuilder {
@@ -13,6 +18,11 @@ func B() *ErrorBuilder {
 
 func (b *ErrorBuilder) Msg(msg string) *ErrorBuilder {
 	b.message = msg
+	return b
+}
+
+func (b *ErrorBuilder) Code(code int) *ErrorBuilder {
+	b.code = code
 	return b
 }
 
@@ -26,9 +36,9 @@ func (b *ErrorBuilder) Causef(format string, a ...any) *ErrorBuilder {
 }
 
 func (b *ErrorBuilder) Err() error {
-	if b.message == "" {
-		return fmt.Errorf("%w", b.cause)
+	return Error{
+		Message: b.message,
+		Cause:   b.cause,
+		Code:    b.code,
 	}
-
-	return fmt.Errorf("%s: %w", b.message, b.cause)
 }

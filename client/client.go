@@ -1,7 +1,7 @@
 package client
 
 import (
-	"chat/shared"
+	"chat/shared/errs"
 	"fmt"
 	"net"
 	"net/http"
@@ -27,7 +27,7 @@ type Client struct {
 }
 
 func New(cfg Config) (*Client, error) {
-	eb := shared.B().Msg("failed to initialize client")
+	eb := errs.B().Msg("failed to initialize client")
 
 	if cfg.HTTPClient == nil {
 		return nil, eb.Causef("http client not passed").Err()

@@ -1,55 +1,17 @@
-package shared
+package http
 
 import (
 	"bytes"
+	"chat/shared/errs"
+	"chat/shared/utils"
 	"context"
 	"encoding/json"
 	"io"
 	"net/http"
 )
 
-type httpError struct {
-	Message string `json:"message"`
-}
-
-func WriteHTTPError(w http.ResponseWriter, code int, err error) {
-	body := httpError{
-		Message: err.Error(),
-	}
-
-	bytes, _ := json.Marshal(body)
-
-	w.WriteHeader(code)
-	w.Write(bytes)
-}
-
-type validatable interface {
-	Validate() error
-}
-
-func ParseHTTPRequest[T validatable](r *http.Request) (T, error) {
-	var val T
-
-	bytes, err := io.ReadAll(r.Body)
-	if err != nil {
-		return val, err
-	}
-
-	err = json.Unmarshal(bytes, &val)
-	if err != nil {
-		return val, err
-	}
-
-	err = val.Validate()
-	if err != nil {
-		return val, err
-	}
-
-	return val, nil
-}
-
-func DoHTTPRequest[Resp any](ctx context.Context, client *http.Client, method, url string, reqStruct any) (Resp, error) {
-	eb := B().Msg("failed to do http request")
+func DoRequest[Resp any](ctx context.Context, client *http.Client, method, url string, reqStruct any) (Resp, error) {
+	eb := errs.B().Msg("failed to do http request")
 	var respStruct Resp
 
 	var body io.Reader
@@ -73,7 +35,7 @@ func DoHTTPRequest[Resp any](ctx context.Context, client *http.Client, method, u
 	if err != nil {
 		return respStruct, eb.Cause(err).Err()
 	}
-	defer CloseWithEB(resp.Body, eb)
+	defer utils.CloseWithEB(resp.Body, eb)
 
 	respBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -81,7 +43,7 @@ func DoHTTPRequest[Resp any](ctx context.Context, client *http.Client, method, u
 	}
 
 	if resp.StatusCode >= 400 {
-		var httpErr httpError
+		var httpErr response
 		_ = json.Unmarshal(respBytes, &httpErr)
 		if httpErr.Message != "" {
 			return respStruct, eb.Causef("%v", httpErr.Message).Err()

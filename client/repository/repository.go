@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"chat/shared"
+	"chat/shared/errs"
 	"fmt"
 	"net"
 	"net/http"
@@ -17,7 +17,7 @@ type Repository struct {
 }
 
 func New(cfg RepositoryConfig) (*Repository, error) {
-	eb := shared.B().Msg("failed to initialize repository")
+	eb := errs.B().Msg("failed to initialize repository")
 
 	if cfg.ServerAddr == nil {
 		return nil, eb.Causef("server addr not passed").Err()

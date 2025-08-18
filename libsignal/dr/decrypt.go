@@ -4,12 +4,12 @@ import (
 	"chat/libsignal/aecd"
 	"chat/libsignal/header"
 	"chat/libsignal/hkdf"
-	"chat/shared"
+	"chat/shared/errs"
 	"slices"
 )
 
 func (r *Ratchet) Decrypt(headers map[string]any, cyphertext []byte, associatedData []byte) ([]byte, error) {
-	eb := shared.B().Msg("failed to ratched decrypt")
+	eb := errs.B().Msg("failed to ratched decrypt")
 
 	plaintext, err := r.trySkippedMessageKeys(headers, cyphertext, associatedData)
 	if err != nil {
@@ -65,7 +65,7 @@ func (r *Ratchet) Decrypt(headers map[string]any, cyphertext []byte, associatedD
 }
 
 func (r *Ratchet) trySkippedMessageKeys(headers map[string]any, cyphertext []byte, associatedData []byte) ([]byte, error) {
-	eb := shared.B().Msg("failed to try skipped message keys")
+	eb := errs.B().Msg("failed to try skipped message keys")
 
 	pubKey, ok := headers[header.PublicKeyName].([]byte)
 	if !ok {
@@ -96,7 +96,7 @@ func (r *Ratchet) trySkippedMessageKeys(headers map[string]any, cyphertext []byt
 }
 
 func (r *Ratchet) skipMessageKeys(until int) error {
-	eb := shared.B().Msg("failed to skip message keys")
+	eb := errs.B().Msg("failed to skip message keys")
 
 	if r.numReceiving+MaximumSkip < until {
 		return eb.Causef("tried skip too much").Err()

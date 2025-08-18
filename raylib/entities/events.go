@@ -3,7 +3,7 @@ package entities
 type ClickEvent struct {
 	ShouldPropagate bool
 }
-type ClickEventHandler func(event *ClickEvent)
+type ClickEventHandler func(this *RectangleWidget, event *ClickEvent)
 
 type FocusEvent struct{}
 type FocusEventHandler func(event *FocusEvent)

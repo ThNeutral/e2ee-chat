@@ -1,7 +1,7 @@
 package echo
 
 import (
-	"chat/shared"
+	"chat/shared/errs"
 	"context"
 )
 
@@ -17,7 +17,7 @@ type EchoRepository interface {
 }
 
 func New(cfg Config) (*Echo, error) {
-	eb := shared.B().Msg("failed to initialize echo service")
+	eb := errs.B().Msg("failed to initialize echo service")
 
 	if cfg.EchoRepository == nil {
 		return nil, eb.Causef("echo repository not passed").Err()

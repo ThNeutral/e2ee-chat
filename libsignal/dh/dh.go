@@ -1,13 +1,13 @@
 package dh
 
 import (
-	"chat/shared"
+	"chat/shared/errs"
 
 	"golang.org/x/crypto/curve25519"
 )
 
 func DH(pair *KeyPair, pub []byte) ([]byte, error) {
-	eb := shared.B().Msg("failed to perform DH")
+	eb := errs.B().Msg("failed to perform DH")
 
 	secret, err := curve25519.X25519(pair.private, pub)
 	if err != nil {

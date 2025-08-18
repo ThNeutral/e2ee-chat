@@ -2,19 +2,20 @@ package repository
 
 import (
 	"chat/server"
-	"chat/shared"
 	"chat/shared/endpoints"
+	"chat/shared/errs"
+	"chat/shared/http"
 	"context"
 )
 
 func (r *Repository) Echo(ctx context.Context, payload string) (string, error) {
-	eb := shared.B().Msg("failed to execute echo")
+	eb := errs.B().Msg("failed to execute echo")
 
 	req := server.EchoRequest{
 		Value: payload,
 	}
 
-	resp, err := shared.DoHTTPRequest[server.EchoResponse](ctx, r.httpClient, "POST", r.getServerURL(endpoints.Echo), req)
+	resp, err := http.DoRequest[server.EchoResponse](ctx, r.httpClient, "POST", r.getServerURL(endpoints.Echo), req)
 	if err != nil {
 		return "", eb.Cause(err).Err()
 	}

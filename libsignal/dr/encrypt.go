@@ -4,11 +4,11 @@ import (
 	"chat/libsignal/aecd"
 	"chat/libsignal/header"
 	"chat/libsignal/hkdf"
-	"chat/shared"
+	"chat/shared/errs"
 )
 
 func (r *Ratchet) Encrypt(plaintext []byte, associatedData []byte) (map[string]any, []byte, error) {
-	eb := shared.B().Msg("failed to ratchet encrypt")
+	eb := errs.B().Msg("failed to ratchet encrypt")
 
 	chainKeySending, messageKey := hkdf.KDF_CK(r.chainKeySending)
 	r.chainKeySending = chainKeySending

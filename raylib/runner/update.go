@@ -8,6 +8,10 @@ import (
 )
 
 func (r *Runner) update() {
+	if r.root == nil {
+		return
+	}
+
 	if input := rlutils.GetInputForLastFrame(); len(input) != 0 {
 		r.handleInput(input)
 	}
@@ -45,7 +49,7 @@ func (r *Runner) handleMouseClick() {
 			ShouldPropagate: false,
 		}
 
-		widget.OnClick(event)
+		widget.OnClick(widget, event)
 
 		if !event.ShouldPropagate {
 			break

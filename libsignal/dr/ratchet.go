@@ -8,7 +8,7 @@ import (
 	"chat/libsignal/dh"
 	"chat/libsignal/header"
 	"chat/libsignal/hkdf"
-	"chat/shared"
+	"chat/shared/errs"
 )
 
 const MaximumSkip = 10
@@ -31,7 +31,7 @@ type Ratchet struct {
 }
 
 func NewRatchetFromPublicKey(secret []byte, theirDHPublicKey []byte) (*Ratchet, error) {
-	eb := shared.B().Msg("failed to generate ratchet from public key")
+	eb := errs.B().Msg("failed to generate ratchet from public key")
 
 	ratchet := Ratchet{}
 
@@ -86,7 +86,7 @@ func NewRatchetFromKeyPair(secret []byte, ourKeyPair *dh.KeyPair) *Ratchet {
 }
 
 func (r *Ratchet) updateState(headers map[string]any) error {
-	eb := shared.B().Msg("failed to update state")
+	eb := errs.B().Msg("failed to update state")
 
 	pubKey, ok := headers[header.PublicKeyName].([]byte)
 	if !ok {

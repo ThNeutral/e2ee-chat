@@ -2,8 +2,8 @@ package main
 
 import (
 	"chat/server"
+	"chat/server/runner"
 	"chat/server/services"
-	"chat/shared"
 	"chat/shared/endpoints"
 	"fmt"
 	"log"
@@ -22,11 +22,11 @@ func startServer(serverPort int) {
 		log.Fatalln(err)
 	}
 
-	runner := shared.NewRunner()
-	runner.Post(endpoints.Echo, serv.HandleEcho)
+	r := runner.New()
+	runner.Post(r, endpoints.Echo, serv.HandleEcho)
 
 	log.Println("Started server")
-	err = http.ListenAndServe(fmt.Sprintf(":%v", serverPort), runner)
+	err = http.ListenAndServe(fmt.Sprintf(":%v", serverPort), r)
 	if err != nil {
 		log.Fatalln(err)
 	}

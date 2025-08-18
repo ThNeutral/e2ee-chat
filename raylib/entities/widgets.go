@@ -7,10 +7,9 @@ import (
 )
 
 type WindowConfig struct {
-	Width           int32
-	Height          int32
-	Title           string
-	BackgroundColor color.RGBA
+	Width  int32
+	Height int32
+	Title  string
 }
 
 func (cfg WindowConfig) ToRectangle() rl.RectangleInt32 {

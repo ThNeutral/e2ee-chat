@@ -9,12 +9,16 @@ import (
 
 func (r *Runner) draw() {
 	rl.BeginDrawing()
+	defer rl.EndDrawing()
+
+	if r.root == nil {
+		rl.ClearBackground(rl.Black)
+		return
+	}
 
 	rl.ClearBackground(r.root.BackgroundColor)
 
 	r.drawWidget(nil, r.root)
-
-	rl.EndDrawing()
 }
 
 func (r *Runner) drawWidget(parentRect *rl.RectangleInt32, widget *entities.RectangleWidget) {

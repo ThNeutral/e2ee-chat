@@ -1,4 +1,4 @@
-package runner
+package raylib
 
 import (
 	"chat/raylib/entities"
@@ -6,14 +6,13 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-func getRectangleWidget(x int32, y int32, width int32, height int32) *entities.RectangleWidget {
+type baseRectangleWidgetProps struct {
+	Position rl.RectangleInt32
+}
+
+func baseRectangleWidget(props baseRectangleWidgetProps) *entities.RectangleWidget {
 	button := &entities.RectangleWidget{
-		RectangleInt32: rl.RectangleInt32{
-			X:      x,
-			Y:      y,
-			Width:  width,
-			Height: height,
-		},
+		RectangleInt32: props.Position,
 
 		BackgroundColor: rl.LightGray,
 		TextColor:       rl.Black,

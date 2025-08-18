@@ -1,13 +1,13 @@
 package runner
 
 import (
-	"chat/shared"
+	"chat/shared/errs"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
 func (r *Runner) Init() error {
-	eb := shared.B().Msg("failed to init raylib")
+	eb := errs.B().Msg("failed to init raylib")
 
 	if r.running {
 		return eb.Causef("already running").Err()
@@ -22,7 +22,7 @@ func (r *Runner) Init() error {
 }
 
 func (r *Runner) Close() error {
-	eb := shared.B().Msg("failed to close raylib")
+	eb := errs.B().Msg("failed to close raylib")
 
 	if !r.running {
 		return eb.Causef("not running").Err()
@@ -35,7 +35,7 @@ func (r *Runner) Close() error {
 }
 
 func (r *Runner) Run() error {
-	eb := shared.B().Msg("failed to start loop")
+	eb := errs.B().Msg("failed to start loop")
 
 	if !r.running {
 		return eb.Causef("not running").Err()

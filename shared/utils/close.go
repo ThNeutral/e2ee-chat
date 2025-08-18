@@ -1,6 +1,9 @@
-package shared
+package utils
 
-import "log"
+import (
+	"chat/shared/errs"
+	"log"
+)
 
 type closer interface {
 	Close() error
@@ -13,7 +16,7 @@ func Close(c closer) {
 	}
 }
 
-func CloseWithEB(c closer, eb *ErrorBuilder) {
+func CloseWithEB(c closer, eb *errs.ErrorBuilder) {
 	err := c.Close()
 	if err != nil {
 		log.Println(eb.Cause(err).Err())

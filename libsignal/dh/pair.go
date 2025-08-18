@@ -1,7 +1,7 @@
 package dh
 
 import (
-	"chat/shared"
+	"chat/shared/errs"
 	"crypto/ecdh"
 	"crypto/rand"
 )
@@ -12,7 +12,7 @@ type KeyPair struct {
 }
 
 func NewKeyPair() (*KeyPair, error) {
-	eb := shared.B().Msg("failed to generate dh pair")
+	eb := errs.B().Msg("failed to generate dh pair")
 	curve := ecdh.X25519()
 
 	privateKey, err := curve.GenerateKey(rand.Reader)

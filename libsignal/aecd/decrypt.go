@@ -1,7 +1,7 @@
 package aecd
 
 import (
-	"chat/shared"
+	"chat/shared/errs"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/hmac"
@@ -11,7 +11,7 @@ import (
 )
 
 func Decrypt(messageKey, ciphertextWithTag, associatedData []byte) ([]byte, error) {
-	eb := shared.B().Msg("failed to aecd decrypt")
+	eb := errs.B().Msg("failed to aecd decrypt")
 
 	if len(ciphertextWithTag) < 96 {
 		return nil, eb.Causef("ciphertext too short").Err()
