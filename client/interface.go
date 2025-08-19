@@ -12,4 +12,9 @@ type GUI interface {
 
 type Websocket interface {
 	Connect() error
+	Disconnect(reason string) error
+	IsConnected() bool
+
+	SetOnConnectHandler(entities.OnConnectHandler)
+	SetOnDisconnectHandler(entities.OnDisconnectHandler)
 }

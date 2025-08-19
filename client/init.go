@@ -20,11 +20,26 @@ func (c *Client) init() {
 	}, rl.Red)
 
 	circle.OnClickField = func() {
-		err := c.websocket.Connect()
-		if err != nil {
-			fmt.Println(err)
+		if c.websocket.IsConnected() {
+			err := c.websocket.Disconnect("manual disconnect")
+			if err != nil {
+				fmt.Println(err)
+			}
+		} else {
+			err := c.websocket.Connect()
+			if err != nil {
+				fmt.Println(err)
+			}
 		}
 	}
+
+	c.websocket.SetOnConnectHandler(func() {
+		circle.Color = rl.Green
+	})
+
+	c.websocket.SetOnDisconnectHandler(func() {
+		circle.Color = rl.Red
+	})
 
 	root.AddChild(circle)
 }

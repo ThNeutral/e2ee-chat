@@ -16,5 +16,3 @@ type Component interface {
 	Children() []Component
 	AddChild(Component)
 }
-
-type OnClickHandler func()

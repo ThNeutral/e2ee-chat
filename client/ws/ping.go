@@ -15,6 +15,10 @@ func (ws *Websocket) pingLoop() {
 	defer ticker.Stop()
 
 	for range ticker.C {
+		if !ws.IsConnected() {
+			return
+		}
+
 		if time.Now().Before(ws.lastMessageTime.Add(PING_DELAY)) {
 			return
 		}

@@ -7,6 +7,10 @@ import (
 
 func (ws *Websocket) reader() {
 	for {
+		if !ws.IsConnected() {
+			return
+		}
+
 		messageType, payload, err := ws.conn.Read(context.TODO())
 		if err != nil {
 			fmt.Println(err)

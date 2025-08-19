@@ -11,6 +11,7 @@ import (
 func (h *Hub) readLoop(c *websocket.Conn) {
 	for {
 		messageType, payload, err := c.Read(context.TODO())
+
 		if err != nil {
 			log.Printf("failed to read message: %v", err)
 			h.finalize(c)
