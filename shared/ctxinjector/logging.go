@@ -1,4 +1,4 @@
-package logging
+package ctxinjector
 
 import (
 	"context"
@@ -12,5 +12,10 @@ func InjectLogger(ctx context.Context, logger *slog.Logger) context.Context {
 }
 
 func GetLogger(ctx context.Context) *slog.Logger {
-	return ctx.Value(loggerKey{}).(*slog.Logger)
+	logger, ok := ctx.Value(loggerKey{}).(*slog.Logger)
+	if !ok {
+		return nil
+	}
+
+	return logger
 }

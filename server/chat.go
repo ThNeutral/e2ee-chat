@@ -1,14 +1,14 @@
 package server
 
 import (
-	"chat/shared/logging"
+	"chat/shared/ctxinjector"
 	"net/http"
 
 	"github.com/coder/websocket"
 )
 
 func (s *Server) HandleConnectChat(w http.ResponseWriter, r *http.Request) {
-	logger := logging.GetLogger(r.Context())
+	logger := ctxinjector.GetLogger(r.Context())
 
 	conn, err := websocket.Accept(w, r, nil)
 	if err != nil {

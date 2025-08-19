@@ -9,10 +9,10 @@ import (
 )
 
 func (h *Hub) HandleSignal() {
-	timer := time.NewTimer(5 * time.Second)
-	defer timer.Stop()
+	ticker := time.NewTicker(5 * time.Second)
+	defer ticker.Stop()
 
-	for range timer.C {
+	for range ticker.C {
 		for conn := range h.conns {
 			go func(c *websocket.Conn) {
 				err := c.Write(

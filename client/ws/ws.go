@@ -8,10 +8,10 @@ import (
 )
 
 type Config struct {
-	WSEndpoint url.URL
+	WSEndpoint *url.URL
 }
 type Websocket struct {
-	wsEndpoint url.URL
+	wsEndpoint *url.URL
 	conn       *websocket.Conn
 }
 

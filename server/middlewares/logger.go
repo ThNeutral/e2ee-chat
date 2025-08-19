@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"chat/shared/logging"
+	"chat/shared/ctxinjector"
 	"log/slog"
 	"net/http"
 
@@ -19,9 +19,14 @@ func Logger(next http.Handler) http.Handler {
 			slog.String("path", r.URL.Path),
 		)
 
-		ctx := logging.InjectLogger(r.Context(), logger)
+		ctx := ctxinjector.InjectLogger(r.Context(), logger)
 
 		next.ServeHTTP(w, r.WithContext(ctx))
+
+		err := ctxinjector.GetError(ctx)
+		if err != nil {
+			logger.Error("error handling request", "err", err)
+		}
 
 		logger.Info("finished handling request")
 	})

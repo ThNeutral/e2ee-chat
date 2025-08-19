@@ -13,7 +13,7 @@ func main() {
 	if *mode == "client" {
 		runClient()
 	} else if *mode == "server" {
-
+		runServer()
 	} else {
 		fmt.Printf("unexpected mode: %s\nUsage:\n", *mode)
 		flag.PrintDefaults()

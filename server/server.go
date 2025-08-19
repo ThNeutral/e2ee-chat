@@ -22,6 +22,7 @@ func New(cfg Config) *Server {
 	router := chi.NewRouter()
 
 	router.Use(middlewares.Logger)
+	router.Use(middlewares.ResponseWriterWrapper)
 
 	server := &Server{
 		port:    cfg.Port,
@@ -29,7 +30,7 @@ func New(cfg Config) *Server {
 		hub:     cfg.Hub,
 	}
 
-	router.Post("/chat", server.HandleConnectChat)
+	router.Get("/chat", server.HandleConnectChat)
 
 	return server
 }
