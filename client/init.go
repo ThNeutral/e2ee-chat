@@ -2,6 +2,7 @@ package client
 
 import (
 	"chat/client/components"
+	"chat/client/entities"
 	"chat/shared/rlutils"
 	"fmt"
 
@@ -41,5 +42,15 @@ func (c *Client) init() {
 		circle.Color = rl.Red
 	})
 
+	input := components.NewInput(rl.RectangleInt32{
+		X:      200,
+		Y:      150,
+		Width:  150,
+		Height: 25,
+	}, rl.White, func(component entities.Component, frameInput []rune) {
+
+	})
+
 	root.AddChild(circle)
+	root.AddChild(input)
 }

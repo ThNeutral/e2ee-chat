@@ -18,6 +18,8 @@ func (r *Raylib) drawComponent(c entities.Component) {
 		r.drawCircle(c.(*components.CircleComponent))
 	case entities.ComponentTypeRectangle:
 		r.drawRectangle(c.(*components.RectangleComponent))
+	case entities.ComponentTypeInput:
+		r.drawRectangle(c.(*components.InputComponent).RectangleComponent)
 	default:
 		log.Fatalf("unknown component type: %v\n", c.Type())
 	}
@@ -31,6 +33,8 @@ func (r *Raylib) drawCircle(c *components.CircleComponent) {
 func (r *Raylib) drawRectangle(rect *components.RectangleComponent) {
 	rl.DrawRectangle(rect.X, rect.Y, rect.Width, rect.Height, rect.Color)
 	r.drawChildren(rect)
+
+	rl.DrawText(rect.Text_, rect.X, rect.Y, 16, rl.Black)
 }
 
 func (r *Raylib) drawChildren(c entities.Component) {

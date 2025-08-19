@@ -22,6 +22,8 @@ type Raylib struct {
 
 	running bool
 	root    *components.RectangleComponent
+
+	focused entities.Component
 }
 
 func New(cfg Config) *Raylib {
