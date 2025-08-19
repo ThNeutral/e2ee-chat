@@ -1,6 +1,8 @@
 package entities
 
-import "chat/shared/rlutils"
+import (
+	"chat/shared/rlutils"
+)
 
 type ComponentType int
 

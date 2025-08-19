@@ -1,6 +1,7 @@
 package raylib
 
 import (
+	"chat/client/components"
 	"chat/client/entities"
 	"log"
 
@@ -14,20 +15,20 @@ func (r *Raylib) draw() {
 func (r *Raylib) drawComponent(c entities.Component) {
 	switch c.Type() {
 	case entities.ComponentTypeCircle:
-		r.drawCircle(c.(*entities.CircleComponent))
+		r.drawCircle(c.(*components.CircleComponent))
 	case entities.ComponentTypeRectangle:
-		r.drawRectangle(c.(*entities.RectangleComponent))
+		r.drawRectangle(c.(*components.RectangleComponent))
 	default:
 		log.Fatalf("unknown component type: %v\n", c.Type())
 	}
 }
 
-func (r *Raylib) drawCircle(c *entities.CircleComponent) {
+func (r *Raylib) drawCircle(c *components.CircleComponent) {
 	rl.DrawCircle(c.Center.X, c.Center.Y, c.Radius, c.Color)
 	r.drawChildren(c)
 }
 
-func (r *Raylib) drawRectangle(rect *entities.RectangleComponent) {
+func (r *Raylib) drawRectangle(rect *components.RectangleComponent) {
 	rl.DrawRectangle(rect.X, rect.Y, rect.Width, rect.Height, rect.Color)
 	r.drawChildren(rect)
 }

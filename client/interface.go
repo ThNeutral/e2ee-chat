@@ -1,13 +1,15 @@
 package client
 
-import "chat/client/entities"
+import (
+	"chat/client/entities"
+)
 
 type GUI interface {
 	Init() error
 	Close() error
 	Run() error
 
-	GetRootComponent() entities.Component
+	Root() entities.Component
 }
 
 type Websocket interface {

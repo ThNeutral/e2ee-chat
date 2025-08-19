@@ -1,7 +1,7 @@
 package client
 
 import (
-	"chat/client/entities"
+	"chat/client/components"
 	"chat/shared/rlutils"
 	"fmt"
 
@@ -9,9 +9,9 @@ import (
 )
 
 func (c *Client) init() {
-	root := c.gui.GetRootComponent()
+	root := c.gui.Root()
 
-	circle := entities.NewCircleComponent(rlutils.Circle{
+	circle := components.NewCircle(rlutils.Circle{
 		Center: rlutils.Vector2{
 			X: 150,
 			Y: 150,

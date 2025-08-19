@@ -1,6 +1,7 @@
 package raylib
 
 import (
+	"chat/client/components"
 	"chat/client/entities"
 	"chat/shared/rlutils"
 	"fmt"
@@ -20,7 +21,7 @@ type Raylib struct {
 	targetFramerate int
 
 	running bool
-	root    *entities.RectangleComponent
+	root    *components.RectangleComponent
 }
 
 func New(cfg Config) *Raylib {
@@ -32,7 +33,7 @@ func New(cfg Config) *Raylib {
 		cfg.TargetFramerate = 60
 	}
 
-	root := entities.NewRectangleComponent(rl.RectangleInt32{
+	root := components.NewRectangle(rl.RectangleInt32{
 		X:      0,
 		Y:      0,
 		Width:  cfg.Size.X,
@@ -72,6 +73,6 @@ func (r *Raylib) Close() error {
 	return nil
 }
 
-func (r *Raylib) GetRootComponent() entities.Component {
+func (r *Raylib) Root() entities.Component {
 	return r.root
 }
