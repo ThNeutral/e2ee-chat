@@ -1,18 +1,23 @@
 package hub
 
-import "github.com/coder/websocket"
+import (
+	"sync"
+
+	"github.com/coder/websocket"
+)
 
 type Config struct{}
 type Hub struct {
-	conns map[*websocket.Conn]bool
+	connsMutex sync.RWMutex
+	conns      map[*websocket.Conn]*connectionStatus
 }
 
 func New(cfg Config) *Hub {
 	hub := &Hub{
-		conns: map[*websocket.Conn]bool{},
+		conns: map[*websocket.Conn]*connectionStatus{},
 	}
 
-	go hub.HandleSignal()
+	go hub.pingLoop()
 
 	return hub
 }

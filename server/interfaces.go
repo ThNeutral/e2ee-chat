@@ -1,7 +1,9 @@
 package server
 
-import "github.com/coder/websocket"
+import (
+	"net/http"
+)
 
 type Hub interface {
-	AddConnection(*websocket.Conn) error
+	Accept(http.ResponseWriter, *http.Request) error
 }

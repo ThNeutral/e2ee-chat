@@ -10,6 +10,7 @@ func (ws *Websocket) reader() {
 		messageType, payload, err := ws.conn.Read(context.TODO())
 		if err != nil {
 			fmt.Println(err)
+			ws.finalize()
 			continue
 		}
 
