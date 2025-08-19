@@ -1,18 +1,17 @@
-package raylib
+package entities
 
 import (
-	"chat/client/raylib/entities"
 	"chat/shared/rlutils"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
 type CircleComponent struct {
-	entities.Circle
+	rlutils.Circle
 	BaseComponent
 }
 
-func NewCircleComponent(circle entities.Circle, color rl.Color) *CircleComponent {
+func NewCircleComponent(circle rlutils.Circle, color rl.Color) *CircleComponent {
 	return &CircleComponent{
 		Circle: circle,
 		BaseComponent: BaseComponent{
@@ -27,5 +26,5 @@ func (c *CircleComponent) Type() ComponentType {
 }
 
 func (c *CircleComponent) Contains(point rlutils.Vector2) bool {
-	return rlutils.V2_Distance(c.Center, point) <= c.Radius
+	return rlutils.Circle_Contains(c.Circle, point)
 }

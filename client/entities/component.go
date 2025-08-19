@@ -1,4 +1,4 @@
-package raylib
+package entities
 
 import "chat/shared/rlutils"
 
@@ -14,4 +14,7 @@ type Component interface {
 	OnClick() OnClickHandler
 	Contains(rlutils.Vector2) bool
 	Children() []Component
+	AddChild(Component)
 }
+
+type OnClickHandler func()

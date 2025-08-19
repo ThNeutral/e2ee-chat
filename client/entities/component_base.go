@@ -1,8 +1,6 @@
-package raylib
+package entities
 
 import rl "github.com/gen2brain/raylib-go/raylib"
-
-type OnClickHandler func(c Component)
 
 type BaseComponent struct {
 	Color         rl.Color
@@ -17,4 +15,8 @@ func (c *BaseComponent) OnClick() OnClickHandler {
 
 func (c *BaseComponent) Children() []Component {
 	return c.ChildrenField
+}
+
+func (c *BaseComponent) AddChild(component Component) {
+	c.ChildrenField = append(c.ChildrenField, component)
 }

@@ -1,13 +1,13 @@
 package client
 
-import "chat/client/raylib"
+import "chat/client/entities"
 
 type GUI interface {
 	Init() error
 	Close() error
 	Run() error
 
-	SetRootComponent(raylib.Component)
+	GetRootComponent() entities.Component
 }
 
 type Websocket interface {

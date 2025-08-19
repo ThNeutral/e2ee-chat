@@ -1,8 +1,7 @@
 package client
 
 import (
-	"chat/client/raylib"
-	"chat/client/raylib/entities"
+	"chat/client/entities"
 	"chat/shared/rlutils"
 	"fmt"
 
@@ -10,16 +9,9 @@ import (
 )
 
 func (c *Client) init() {
-	root := raylib.NewRectangleComponent(rl.RectangleInt32{
-		X:      100,
-		Y:      100,
-		Width:  400,
-		Height: 400,
-	}, rl.RayWhite)
+	root := c.gui.GetRootComponent()
 
-	c.gui.SetRootComponent(root)
-
-	circle := raylib.NewCircleComponent(entities.Circle{
+	circle := entities.NewCircleComponent(rlutils.Circle{
 		Center: rlutils.Vector2{
 			X: 150,
 			Y: 150,
@@ -27,12 +19,12 @@ func (c *Client) init() {
 		Radius: 25,
 	}, rl.Red)
 
-	circle.OnClickField = func(_ raylib.Component) {
+	circle.OnClickField = func() {
 		err := c.websocket.Connect()
 		if err != nil {
 			fmt.Println(err)
 		}
 	}
 
-	root.ChildrenField = append(root.ChildrenField, circle)
+	root.AddChild(circle)
 }

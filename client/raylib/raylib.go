@@ -1,6 +1,7 @@
 package raylib
 
 import (
+	"chat/client/entities"
 	"chat/shared/rlutils"
 	"fmt"
 
@@ -19,7 +20,7 @@ type Raylib struct {
 	targetFramerate int
 
 	running bool
-	root    *RectangleComponent
+	root    *entities.RectangleComponent
 }
 
 func New(cfg Config) *Raylib {
@@ -31,14 +32,14 @@ func New(cfg Config) *Raylib {
 		cfg.TargetFramerate = 60
 	}
 
-	root := NewRectangleComponent(rl.RectangleInt32{
+	root := entities.NewRectangleComponent(rl.RectangleInt32{
 		X:      0,
 		Y:      0,
 		Width:  cfg.Size.X,
 		Height: cfg.Size.Y,
 	}, cfg.BackgroundColor)
 
-	root.OnClickField = func(c Component) {}
+	root.OnClickField = func() {}
 
 	return &Raylib{
 		running: false,
@@ -71,6 +72,6 @@ func (r *Raylib) Close() error {
 	return nil
 }
 
-func (r *Raylib) SetRootComponent(component Component) {
-	r.root.ChildrenField = []Component{component}
+func (r *Raylib) GetRootComponent() entities.Component {
+	return r.root
 }

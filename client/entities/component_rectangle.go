@@ -1,4 +1,4 @@
-package raylib
+package entities
 
 import (
 	"chat/shared/rlutils"
@@ -26,5 +26,5 @@ func (rect *RectangleComponent) Type() ComponentType {
 }
 
 func (rect *RectangleComponent) Contains(point rlutils.Vector2) bool {
-	return point.X >= rect.X && point.X <= rect.X+rect.Width && point.Y >= rect.Y && point.Y <= rect.Y+rect.Height
+	return rlutils.Rect_Contains(rect.RectangleInt32, point)
 }
